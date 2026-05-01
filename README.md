@@ -8,7 +8,7 @@
 
 This project demonstrates a production-grade test automation architecture for validating scholarly metadata systems, using Crossref’s public APIs and search interface as a real-world case study.
 
-This reflects how a Senior Software Developer in Test approaches quality engineering in a distributed, API-driven system.
+This project demonstrates how quality engineering is applied in a distributed, API-driven system from a Senior Software Developer in Test perspective.
 
 I designed and implemented this test architecture end-to-end, including test strategy, framework setup, CI/CD integration, and reporting.
 
@@ -40,12 +40,24 @@ npm run test:coverage
 5. [Setup Instructions](#setup-instructions)
 6. [Test Coverage](#test-coverage)
 7. [CI/CD Pipeline](#cicd-pipeline)
-8. [Real-World Relevance](#real-world-relevance)
-9. [Next Steps](#next-steps)
+8. [Reporting & Observability](#reporting--observability)
+9. [Real-World Relevance](#real-world-relevance)
+10. [Next Steps](#next-steps)
 
 ---
 
 ## Architecture & Strategy
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+    A[Unit Tests] -->|Fast / Local| D{CI/CD Pipeline}
+    B[API Tests] -->|Medium / External| D
+    C[E2E Tests] -->|Slow / Browser| D
+    D --> E[GitHub Actions]
+    E --> F[Test Reports & Coverage]
+```
 
 A mature quality engineering practice requires a layered approach. I adopted the Test Pyramid strategy for this project to balance execution speed, isolation, and confidence.
 
@@ -161,11 +173,23 @@ The pipeline guarantees that no broken code is merged into `main`. It features:
 
 ---
 
+## Reporting & Observability
+
+- Test results are published as HTML artifacts in CI
+- Coverage reports provide visibility into untested areas
+- Failures are surfaced in PR summaries for rapid debugging
+
+This ensures issues are detected early and are actionable for developers.
+
+---
+
 ## Real-World Relevance
 
 This architecture reflects how production systems like Crossref ensure metadata integrity, API reliability, and user-facing search functionality remain stable despite continuous updates.
 
-The layered approach enables fast feedback for developers while maintaining high confidence in system correctness. This approach enables engineering teams to ship changes confidently, knowing that critical metadata workflows and API contracts are continuously validated.
+The layered approach enables fast feedback for developers while maintaining high confidence in system correctness. This approach enables engineering teams to ship changes confidently, knowing that critical metadata workflows and API contracts are continuously validated. 
+
+The approach is designed to scale with growing datasets and increasing API usage, ensuring consistent validation as the system evolves.
 
 ---
 
