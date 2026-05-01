@@ -50,13 +50,27 @@ npm run test:coverage
 
 ### Architecture Diagram
 
-```mermaid
-graph TD
-    A[Unit Tests] -->|Fast / Local| D{CI/CD Pipeline}
-    B[API Tests] -->|Medium / External| D
-    C[E2E Tests] -->|Slow / Browser| D
-    D --> E[GitHub Actions]
-    E --> F[Test Reports & Coverage]
+```text
+           ┌──────────────┐
+           │  Unit Tests  │
+           └──────┬───────┘
+                  ↓
+           ┌──────────────┐
+           │   API Tests  │
+           └──────┬───────┘
+                  ↓
+           ┌──────────────┐
+           │   E2E Tests  │
+           └──────┬───────┘
+                  ↓
+        ┌────────────────────┐
+        │   CI/CD Pipeline   │
+        │  (GitHub Actions)  │
+        └─────────┬──────────┘
+                  ↓
+        ┌────────────────────┐
+        │ Reports & Artifacts│
+        └────────────────────┘
 ```
 
 A mature quality engineering practice requires a layered approach. I adopted the Test Pyramid strategy for this project to balance execution speed, isolation, and confidence.
