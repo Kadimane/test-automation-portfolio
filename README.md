@@ -6,7 +6,11 @@
 
 ## Project Overview
 
-This repository demonstrates a robust, scalable, and maintainable test automation architecture designed specifically for the scholarly metadata domain. Built with **Crossref** as the primary target, this project validates core functionalities across different layers of the technology stack—from low-level DOI manipulation utilities to external API integrations and end-to-end user workflows on `search.crossref.org`.
+This project demonstrates a production-grade test automation architecture for validating scholarly metadata systems, using Crossref’s public APIs and search interface as a real-world case study.
+
+It is designed to simulate how a Senior Software Developer in Test would approach quality engineering in a distributed, API-driven system.
+
+I designed and implemented this test architecture end-to-end, including test strategy, framework setup, CI/CD integration, and reporting.
 
 The goal of this architecture is to provide high confidence in system stability, rapid feedback to developers, and clear documentation of system behavior through automated tests.
 
@@ -15,10 +19,12 @@ The goal of this architecture is to provide high confidence in system stability,
 ## Table of Contents
 1. [Architecture & Strategy](#architecture--strategy)
 2. [Testing Decisions](#testing-decisions)
-3. [Setup Instructions](#setup-instructions)
-4. [Test Coverage](#test-coverage)
-5. [CI/CD Pipeline](#cicd-pipeline)
-6. [Next Steps](#next-steps)
+3. [Key Engineering Challenges & Solutions](#key-engineering-challenges--solutions)
+4. [Setup Instructions](#setup-instructions)
+5. [Test Coverage](#test-coverage)
+6. [CI/CD Pipeline](#cicd-pipeline)
+7. [Real-World Relevance](#real-world-relevance)
+8. [Next Steps](#next-steps)
 
 ---
 
@@ -46,6 +52,31 @@ A mature quality engineering practice requires a layered approach. I adopted the
 - **Content Negotiation**: We bypassed testing alternative representation formats (e.g., XML, BibTeX) in this MVP to focus on the primary JSON API surface.
 - **Deep DOM Validation**: E2E tests avoid relying on deeply nested CSS selectors. Instead, we use semantic locators and ARIA labels. *Why?* Deep DOM assertions make tests brittle.
 - **Rate Limiting / Load Testing**: Not executed against the production Crossref API to avoid unnecessary load. A localized mock or staging environment would be required for this.
+
+---
+
+## Key Engineering Challenges & Solutions
+
+### Handling Unreliable External APIs
+**Challenge**: Public APIs can be slow or inconsistent.
+
+**Solution**:
+- Implemented retry logic with exponential backoff
+- Added response time assertions with tolerance thresholds
+
+### Balancing Test Speed vs Coverage
+**Challenge**: E2E tests are slow but necessary.
+
+**Solution**:
+- Prioritized API and unit layers for fast feedback
+- Limited E2E scope to critical user journeys
+
+### Avoiding Flaky Tests
+**Challenge**: UI tests can become unstable.
+
+**Solution**:
+- Used Playwright’s auto-waiting
+- Relied on semantic selectors instead of brittle DOM paths
 
 ---
 
@@ -109,6 +140,15 @@ The pipeline guarantees that no broken code is merged into `main`. It features:
 - **Cross-Browser Verification**: Playwright automatically tests against both Chrome and Firefox within the pipeline.
 - **Artifact Generation**: HTML reports for E2E tests and coverage reports are automatically uploaded to the workflow summary.
 - **PR Summaries**: A dedicated summary job aggregates the results and posts them directly to pull requests.
+- **Enforcement**: Branch protection rules ensure all tests must pass before merging into `main`.
+
+---
+
+## Real-World Relevance
+
+This architecture reflects how production systems like Crossref ensure metadata integrity, API reliability, and user-facing search functionality remain stable despite continuous updates.
+
+The layered approach enables fast feedback for developers while maintaining high confidence in system correctness.
 
 ---
 
